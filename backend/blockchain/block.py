@@ -27,7 +27,7 @@ class Block:
             "nonce": self.nonce,
         }
 
-        return f"Block: {', '.join([f'{k}: {v}' for k, v in block.items()])}"
+        return f"Block: {{{', '.join([f'{k}: {v}' for k, v in block.items()])}}}"
 
     @staticmethod
     def make_genesis_block():

@@ -6,4 +6,4 @@ if __name__ == "__main__":
     blockchain.add_block("second block data")
     blockchain.add_block("third block data")
 
-    print(blockchain.__repr__())
+    print(blockchain)
