@@ -1,7 +1,7 @@
 import time
 from backend.util.make_hash_sha256 import make_hash_sha256
 
-GENESIS_DATA = {"data": "first block data", "difficulty": 4, "nonce": "first block nonce"}
+GENESIS_DATA = {"data": "first block data", "difficulty": 2, "nonce": 0}
 
 
 class Block:
@@ -9,7 +9,6 @@ class Block:
     Block: a unit of storage.
     Store transactions in a blockchain that supports a cryptocurrency
     """
-
     def __init__(self, timestamp, block_hash, last_block_hash, data, difficulty, nonce):
         self.timestamp = timestamp
         self.block_hash = block_hash
@@ -39,19 +38,21 @@ class Block:
         return Block(timestamp, make_hash_sha256(timestamp), None, **GENESIS_DATA)
 
     @staticmethod
-    def mine_block(last_block, data, difficulty=4, nonce="default nonce"):
+    def mine_block(last_block, data):
         """
-        Mine a block based on the given last_block and data
+        Mine a block based on the given last_block and data, until
+        a block hash is found that meets the leading zeroes proof of
+        work requirement
         """
         timestamp = time.time_ns()
         last_block_hash = last_block.block_hash
-        block_hash = make_hash_sha256(timestamp, last_block_hash, data)
+        difficulty = last_block.difficulty
+        nonce = 0
+
+        block_hash = make_hash_sha256(timestamp, last_block_hash, data, difficulty, nonce)
+        while block_hash[0:difficulty] != '0' * difficulty:
+            nonce += 1
+            timestamp = time.time_ns()
+            block_hash = make_hash_sha256(timestamp, last_block_hash, data, difficulty, nonce)
 
         return Block(timestamp, block_hash, last_block_hash, data, difficulty, nonce)
-
-
-if __name__ == "__main__":
-    genesis_block = Block.make_genesis_block()
-    block = Block.mine_block(genesis_block, "second block data")
-
-    print(block.__repr__())

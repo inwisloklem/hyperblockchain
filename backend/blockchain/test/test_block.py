@@ -5,7 +5,8 @@ def test_make_genesis_block():
     genesis_block = Block.make_genesis_block()
 
     assert isinstance(genesis_block, Block)
-    assert genesis_block.data == GENESIS_DATA
+    assert genesis_block.data == GENESIS_DATA["data"]
+    assert genesis_block.nonce == GENESIS_DATA["nonce"]
     assert genesis_block.last_block_hash is None
 
 
@@ -17,3 +18,4 @@ def test_mine_block():
     assert isinstance(block, Block)
     assert block.data == data
     assert block.last_block_hash == last_block.block_hash
+    assert block.block_hash[0:block.difficulty] == "0" * block.difficulty

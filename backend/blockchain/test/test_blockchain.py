@@ -16,4 +16,4 @@ def test_blockchain_instance():
     genesis_block = first(blockchain.chain)
 
     assert isinstance(blockchain, Blockchain)
-    assert genesis_block.data == GENESIS_DATA
+    assert genesis_block.data == GENESIS_DATA["data"]
