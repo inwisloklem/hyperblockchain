@@ -1,6 +1,6 @@
 import time
-from backend.util.make_hash_sha256 import make_hash_sha256
 from backend.config import MINE_RATE
+from backend.util.make_hash_sha256 import make_hash_sha256
 
 GENESIS_DATA = {"data": "first block data", "difficulty": 2, "nonce": 0}
 
