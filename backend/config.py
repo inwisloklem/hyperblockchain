@@ -1,1 +1,2 @@
-MINE_RATE = 4 * 1e9  # nanoseconds
+SECONDS_MULTIPLIER = 1e9  # nanoseconds in second
+MINE_RATE = 4 * SECONDS_MULTIPLIER
