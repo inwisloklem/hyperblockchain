@@ -1,4 +1,23 @@
+import time
+from backend.config import MINE_RATE, SECONDS_MULTIPLIER
 from backend.blockchain.block import GENESIS_DATA, Block
+
+DATA = "second block data"
+
+
+def test_mine_block_slowly_adjust_difficulty():
+    last_block = Block.make_genesis_block()
+    time.sleep(MINE_RATE / SECONDS_MULTIPLIER)
+    block = Block.mine_block(last_block, DATA)
+
+    assert block.difficulty < last_block.difficulty
+
+
+def test_mine_block_quickly_adjust_difficulty():
+    last_block = Block.make_genesis_block()
+    block = Block.mine_block(last_block, DATA)
+
+    assert block.difficulty > last_block.difficulty
 
 
 def test_make_genesis_block():
@@ -12,10 +31,9 @@ def test_make_genesis_block():
 
 def test_mine_block():
     last_block = Block.make_genesis_block()
-    data = "second block data"
-    block = Block.mine_block(last_block, data)
+    block = Block.mine_block(last_block, DATA)
 
     assert isinstance(block, Block)
-    assert block.data == data
+    assert block.data == DATA
     assert block.last_block_hash == last_block.block_hash
     assert block.block_hash[0:block.difficulty] == "0" * block.difficulty
