@@ -9,7 +9,7 @@ PRECISION = 6
 
 def calculate_block_time(blockchain, times, i, round_to_precision=lambda n: round(n, PRECISION)):
     """
-    Calculates and prints different metrics for current iteration
+    Calculate and print different metrics for current iteration
     of block
     """
     start_time = time.time_ns()
