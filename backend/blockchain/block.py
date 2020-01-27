@@ -52,7 +52,7 @@ class Block:
         Make a first block also called genesis
         """
         timestamp = time.time_ns()
-        binary_block_hash = convert_hex_to_binary(make_hash_sha256(timestamp))
+        binary_block_hash = make_hash_sha256(timestamp)
         return Block(timestamp, binary_block_hash, None, **GENESIS_DATA)
 
     @staticmethod
@@ -76,4 +76,4 @@ class Block:
             block_hash = make_hash_sha256(timestamp, last_block_hash, data, difficulty, nonce)
             binary_block_hash = convert_hex_to_binary(block_hash)
 
-        return Block(timestamp, binary_block_hash, last_block_hash, data, difficulty, nonce)
+        return Block(timestamp, block_hash, last_block_hash, data, difficulty, nonce)

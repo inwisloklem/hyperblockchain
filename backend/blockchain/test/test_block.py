@@ -1,6 +1,7 @@
 import time
 from backend.config import MINE_RATE, SECONDS_MULTIPLIER
 from backend.blockchain.block import GENESIS_DATA, Block
+from backend.util.convert import convert_hex_to_binary
 
 DATA = "second block data"
 
@@ -21,7 +22,9 @@ def test_mine_block():
     assert isinstance(block, Block)
     assert block.data == DATA
     assert block.last_block_hash == last_block.block_hash
-    assert block.block_hash[0:block.difficulty] == "0" * block.difficulty
+
+    binary_block_hash = convert_hex_to_binary(block.block_hash)
+    assert binary_block_hash[0:block.difficulty] == "0" * block.difficulty
 
 
 def test_mine_block_quickly_adjust_difficulty():
