@@ -1,5 +1,6 @@
 import time
 from backend.config import MINE_RATE
+from backend.util.convert import convert_hex_to_binary
 from backend.util.make_hash_sha256 import make_hash_sha256
 
 GENESIS_DATA = {"data": "first block data", "difficulty": 2, "nonce": 0}
@@ -51,7 +52,8 @@ class Block:
         Make a first block also called genesis
         """
         timestamp = time.time_ns()
-        return Block(timestamp, make_hash_sha256(timestamp), None, **GENESIS_DATA)
+        binary_block_hash = convert_hex_to_binary(make_hash_sha256(timestamp))
+        return Block(timestamp, binary_block_hash, None, **GENESIS_DATA)
 
     @staticmethod
     def mine_block(last_block, data):
@@ -66,10 +68,12 @@ class Block:
         nonce = 0
 
         block_hash = make_hash_sha256(timestamp, last_block_hash, data, difficulty, nonce)
-        while block_hash[0:difficulty] != '0' * difficulty:
+        binary_block_hash = convert_hex_to_binary(block_hash)
+        while binary_block_hash[0:difficulty] != "0" * difficulty:
             nonce += 1
             timestamp = time.time_ns()
             difficulty = Block.adjust_difficulty(last_block, timestamp)
             block_hash = make_hash_sha256(timestamp, last_block_hash, data, difficulty, nonce)
+            binary_block_hash = convert_hex_to_binary(block_hash)
 
-        return Block(timestamp, block_hash, last_block_hash, data, difficulty, nonce)
+        return Block(timestamp, binary_block_hash, last_block_hash, data, difficulty, nonce)
