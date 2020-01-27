@@ -23,7 +23,7 @@ def calculate_block_time(blockchain, times, i, round_to_precision=lambda n: roun
 
     print(f"Average time to add blocks: {round_to_precision(average_time)}s")
     print(f"New block difficulty: {new_block.difficulty}")
-    print(f"Time to mine new block: {round_to_precision(time_to_mine)}s")
+    print(f"Time to mine new block: {round_to_precision(time_to_mine)}s\n")
 
 
 blockchain = Blockchain()
@@ -33,4 +33,4 @@ try:
     for i in range(NUMBER_OF_ITERATIONS):
         calculate_block_time(blockchain, times, i)
 except KeyboardInterrupt:
-    print(f"Interrupted at {i} block")
+    print(f"Interrupted at block {i}")
