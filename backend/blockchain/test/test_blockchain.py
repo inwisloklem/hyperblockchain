@@ -1,6 +1,6 @@
 from backend.blockchain.blockchain import Blockchain
 from backend.blockchain.block import GENESIS_DATA
-from more_itertools import first, last
+from pydash import head, last
 
 
 def test_add_block():
@@ -13,7 +13,7 @@ def test_add_block():
 
 def test_blockchain_instance():
     blockchain = Blockchain()
-    genesis_block = first(blockchain.chain)
+    genesis_block = head(blockchain.chain)
 
     assert isinstance(blockchain, Blockchain)
     assert genesis_block.data == GENESIS_DATA["data"]

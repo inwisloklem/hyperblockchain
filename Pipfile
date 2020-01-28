@@ -7,7 +7,7 @@ verify_ssl = true
 pytest = "*"
 
 [packages]
-more-itertools = "*"
+pydash = "*"
 
 [requires]
 python_version = "3.7"

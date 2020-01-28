@@ -1,7 +1,7 @@
 import time
 from backend.blockchain.blockchain import Blockchain
 from backend.config import SECONDS_MULTIPLIER
-from more_itertools import last
+from pydash import last
 
 NUMBER_OF_ITERATIONS = 1000
 PRECISION = 6

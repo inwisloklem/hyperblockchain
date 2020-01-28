@@ -1,5 +1,5 @@
 from backend.blockchain.block import Block
-from more_itertools import last
+from pydash import last
 
 
 class Blockchain:
