@@ -1,5 +1,6 @@
 import time
 from backend.config import MINE_RATE
+from backend.blockchain.block_validation_error import BlockValidationError
 from backend.util.convert import convert_hex_to_binary
 from backend.util.make_hash_sha256 import make_hash_sha256
 
@@ -47,6 +48,35 @@ class Block:
         return 1
 
     @staticmethod
+    def is_valid_block(last_block, block):
+        """
+        Validate the block by following rules:
+            - must have proper `last_block_hash` reference
+            - must meet the proof of work requirement of leading zeroes
+            - difficulty must only be adjusted by one
+            - block hash must be valid combination of the block fields
+        """
+        if block.last_block_hash != last_block.block_hash:
+            raise BlockValidationError("Last hash reference of block is invalid")
+
+        if convert_hex_to_binary(block.block_hash)[0:block.difficulty] != "0" * block.difficulty:
+            raise BlockValidationError("Proof of work requirement is not met")
+
+        if abs(block.difficulty - last_block.difficulty) > 1:
+            raise BlockValidationError("Difference in blocks difficulty is greater than one")
+
+        block_args = [
+            block.timestamp,
+            block.last_block_hash,
+            block.data,
+            block.difficulty,
+            block.nonce,
+        ]
+        reconstructed_block_hash = make_hash_sha256(*block_args)
+        if reconstructed_block_hash != block.block_hash:
+            raise BlockValidationError("Reconstructed block hash is invalid")
+
+    @staticmethod
     def make_genesis_block():
         """
         Make a first block also called genesis
@@ -58,7 +88,7 @@ class Block:
     @staticmethod
     def mine_block(last_block, data):
         """
-        Mine a block based on the given last_block and data, until
+        Mine a block based on the given `last_block` and `data`, until
         a block hash is found that meets the leading zeroes proof of
         work requirement
         """
