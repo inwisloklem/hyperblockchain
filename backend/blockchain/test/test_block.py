@@ -1,9 +1,54 @@
+import pytest
 import time
 from backend.config import MINE_RATE, SECONDS_MULTIPLIER
 from backend.blockchain.block import GENESIS_DATA, Block
-from backend.util.convert import convert_hex_to_binary
+from backend.blockchain.block_validation_error import BlockValidationError
+from backend.util.convert import convert_binary_to_hex, convert_hex_to_binary
+from backend.util.make_hash_sha256 import make_hash_sha256
 
 DATA = "second block data"
+MALICIOUS_DATA = "malicious data"
+
+
+def generate_block():
+    """
+    Generate last_block, block pair for tests
+    """
+    last_block = Block.make_genesis_block()
+    return last_block, Block.mine_block(last_block, DATA)
+
+
+def test_is_valid_block_last_block_hash_invalid():
+    last_block, block_last_block_hash_invalid = generate_block()
+    block_last_block_hash_invalid.last_block_hash = MALICIOUS_DATA
+
+    with pytest.raises(BlockValidationError):
+        Block.is_valid_block(last_block, block_last_block_hash_invalid)
+
+
+def test_is_valid_block_proof_of_work_invalid():
+    last_block, block_proof_of_work_invalid = generate_block()
+    binary_block_hash = convert_hex_to_binary(block_proof_of_work_invalid.block_hash)
+    block_proof_of_work_invalid.block_hash = convert_binary_to_hex("1" + binary_block_hash[1:])
+
+    with pytest.raises(BlockValidationError):
+        Block.is_valid_block(last_block, block_proof_of_work_invalid)
+
+
+def test_is_valid_block_block_difficulty_invalid():
+    last_block, block_block_difficulty_invalid = generate_block()
+    block_block_difficulty_invalid.difficulty = 42
+
+    with pytest.raises(BlockValidationError):
+        Block.is_valid_block(last_block, block_block_difficulty_invalid)
+
+
+def test_is_valid_block_block_hash_invalid():
+    last_block, block_block_hash_invalid = generate_block()
+    block_block_hash_invalid.block_hash = make_hash_sha256(MALICIOUS_DATA)
+
+    with pytest.raises(BlockValidationError):
+        Block.is_valid_block(last_block, block_block_hash_invalid)
 
 
 def test_make_genesis_block():
