@@ -74,7 +74,7 @@ class Block:
         ]
         reconstructed_block_hash = make_hash_sha256(*block_args)
         if reconstructed_block_hash != block.block_hash:
-            raise BlockValidationError("Reconstructed block hash is invalid")
+            raise BlockValidationError("Block hash must be correct")
 
     @staticmethod
     def make_genesis_block():
