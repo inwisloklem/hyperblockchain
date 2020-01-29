@@ -12,10 +12,15 @@ MALICIOUS_DATA = "malicious data"
 
 def generate_block():
     """
-    Generate last_block, block pair for tests
+    Generate `last_block`, `block` pair for tests
     """
     last_block = Block.make_genesis_block()
     return last_block, Block.mine_block(last_block, DATA)
+
+
+def test_is_valid_block():
+    last_block, block = generate_block()
+    assert Block.is_valid_block(last_block, block) is None
 
 
 def test_is_valid_block_last_block_hash_invalid():
