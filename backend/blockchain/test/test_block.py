@@ -2,7 +2,7 @@ import pytest
 import time
 from backend.config import MINE_RATE, SECONDS_MULTIPLIER
 from backend.blockchain.block import GENESIS_DATA, Block
-from backend.blockchain.block_validation_error import BlockValidationError
+from backend.blockchain.errors import BlockValidationError
 from backend.util.convert import convert_binary_to_hex, convert_hex_to_binary
 from backend.util.make_hash_sha256 import make_hash_sha256
 
