@@ -18,44 +18,6 @@ def generate_block():
     return last_block, Block.mine_block(last_block, DATA)
 
 
-def test_is_valid_block():
-    last_block, block = generate_block()
-    assert Block.is_valid_block(last_block, block) is None
-
-
-def test_is_valid_block_last_block_hash_invalid():
-    last_block, block_last_block_hash_invalid = generate_block()
-    block_last_block_hash_invalid.last_block_hash = MALICIOUS_DATA
-
-    with pytest.raises(BlockValidationError):
-        Block.is_valid_block(last_block, block_last_block_hash_invalid)
-
-
-def test_is_valid_block_proof_of_work_invalid():
-    last_block, block_proof_of_work_invalid = generate_block()
-    binary_block_hash = convert_hex_to_binary(block_proof_of_work_invalid.block_hash)
-    block_proof_of_work_invalid.block_hash = convert_binary_to_hex("1" + binary_block_hash[1:])
-
-    with pytest.raises(BlockValidationError):
-        Block.is_valid_block(last_block, block_proof_of_work_invalid)
-
-
-def test_is_valid_block_block_difficulty_invalid():
-    last_block, block_block_difficulty_invalid = generate_block()
-    block_block_difficulty_invalid.difficulty = 42
-
-    with pytest.raises(BlockValidationError):
-        Block.is_valid_block(last_block, block_block_difficulty_invalid)
-
-
-def test_is_valid_block_block_hash_invalid():
-    last_block, block_block_hash_invalid = generate_block()
-    block_block_hash_invalid.block_hash = make_hash_sha256(MALICIOUS_DATA)
-
-    with pytest.raises(BlockValidationError):
-        Block.is_valid_block(last_block, block_block_hash_invalid)
-
-
 def test_make_genesis_block():
     genesis_block = Block.make_genesis_block()
 
@@ -90,3 +52,41 @@ def test_mine_block_slowly_adjust_difficulty():
     block = Block.mine_block(last_block, DATA)
 
     assert block.difficulty < last_block.difficulty
+
+
+def test_validate_block():
+    last_block, block = generate_block()
+    assert Block.validate_block(last_block, block) is None
+
+
+def test_validate_block_last_block_hash_invalid():
+    last_block, block_last_block_hash_invalid = generate_block()
+    block_last_block_hash_invalid.last_block_hash = MALICIOUS_DATA
+
+    with pytest.raises(BlockValidationError):
+        Block.validate_block(last_block, block_last_block_hash_invalid)
+
+
+def test_validate_block_proof_of_work_invalid():
+    last_block, block_proof_of_work_invalid = generate_block()
+    binary_block_hash = convert_hex_to_binary(block_proof_of_work_invalid.block_hash)
+    block_proof_of_work_invalid.block_hash = convert_binary_to_hex("1" + binary_block_hash[1:])
+
+    with pytest.raises(BlockValidationError):
+        Block.validate_block(last_block, block_proof_of_work_invalid)
+
+
+def test_validate_block_block_difficulty_invalid():
+    last_block, block_block_difficulty_invalid = generate_block()
+    block_block_difficulty_invalid.difficulty = 42
+
+    with pytest.raises(BlockValidationError):
+        Block.validate_block(last_block, block_block_difficulty_invalid)
+
+
+def test_validate_block_block_hash_invalid():
+    last_block, block_block_hash_invalid = generate_block()
+    block_block_hash_invalid.block_hash = make_hash_sha256(MALICIOUS_DATA)
+
+    with pytest.raises(BlockValidationError):
+        Block.validate_block(last_block, block_block_hash_invalid)
