@@ -29,7 +29,7 @@ class Blockchain:
             raise BlockchainValidationError("Genesis block in the head of chain is invalid")
 
         try:
-            for i, block in enumerate(chain[1:]):
+            for i, block in enumerate(chain[1:], start=1):
                 last_block = chain[i - 1]
                 Block.validate_block(last_block, block)
         except BlockValidationError:
