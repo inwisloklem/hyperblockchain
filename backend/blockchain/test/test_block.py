@@ -10,7 +10,8 @@ DATA = "second block data"
 MALICIOUS_DATA = "malicious data"
 
 
-def generate_block():
+@pytest.fixture
+def last_block_block_pair():
     """
     Generate `last_block`, `block` pair for tests
     """
@@ -25,6 +26,10 @@ def test_make_genesis_block():
     assert genesis_block.data == GENESIS_DATA["data"]
     assert genesis_block.nonce == GENESIS_DATA["nonce"]
     assert genesis_block.last_block_hash is None
+
+
+def test_make_genesis_block_is_always_the_same():
+    assert Block.make_genesis_block() == Block.make_genesis_block()
 
 
 def test_mine_block():
@@ -54,21 +59,21 @@ def test_mine_block_slowly_adjust_difficulty():
     assert block.difficulty < last_block.difficulty
 
 
-def test_validate_block():
-    last_block, block = generate_block()
+def test_validate_block(last_block_block_pair):
+    last_block, block = last_block_block_pair
     assert Block.validate_block(last_block, block) is None
 
 
-def test_validate_block_last_block_hash_invalid():
-    last_block, block_last_block_hash_invalid = generate_block()
+def test_validate_block_last_block_hash_invalid(last_block_block_pair):
+    last_block, block_last_block_hash_invalid = last_block_block_pair
     block_last_block_hash_invalid.last_block_hash = MALICIOUS_DATA
 
     with pytest.raises(BlockValidationError):
         Block.validate_block(last_block, block_last_block_hash_invalid)
 
 
-def test_validate_block_proof_of_work_invalid():
-    last_block, block_proof_of_work_invalid = generate_block()
+def test_validate_block_proof_of_work_invalid(last_block_block_pair):
+    last_block, block_proof_of_work_invalid = last_block_block_pair
     binary_block_hash = convert_hex_to_binary(block_proof_of_work_invalid.block_hash)
     block_proof_of_work_invalid.block_hash = convert_binary_to_hex("1" + binary_block_hash[1:])
 
@@ -76,16 +81,16 @@ def test_validate_block_proof_of_work_invalid():
         Block.validate_block(last_block, block_proof_of_work_invalid)
 
 
-def test_validate_block_block_difficulty_invalid():
-    last_block, block_block_difficulty_invalid = generate_block()
+def test_validate_block_block_difficulty_invalid(last_block_block_pair):
+    last_block, block_block_difficulty_invalid = last_block_block_pair
     block_block_difficulty_invalid.difficulty = 42
 
     with pytest.raises(BlockValidationError):
         Block.validate_block(last_block, block_block_difficulty_invalid)
 
 
-def test_validate_block_block_hash_invalid():
-    last_block, block_block_hash_invalid = generate_block()
+def test_validate_block_block_hash_invalid(last_block_block_pair):
+    last_block, block_block_hash_invalid = last_block_block_pair
     block_block_hash_invalid.block_hash = make_hash_sha256(MALICIOUS_DATA)
 
     with pytest.raises(BlockValidationError):
