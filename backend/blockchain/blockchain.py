@@ -36,6 +36,8 @@ class Blockchain:
         except BlockchainValidationError as e:
             raise BlockchainReplacementError(f"Incoming chain is invalid: {e}")
 
+        self.chain = incoming_chain
+
     @staticmethod
     def validate_blockchain(chain):
         """
