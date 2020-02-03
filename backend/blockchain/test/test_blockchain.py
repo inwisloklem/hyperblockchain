@@ -2,6 +2,7 @@ import pytest
 from backend.blockchain.blockchain import Blockchain
 from backend.blockchain.block import GENESIS_DATA
 from backend.blockchain.errors import BlockchainValidationError
+from copy import deepcopy
 from pydash import head, last
 
 DATA = "second block data"
@@ -9,7 +10,7 @@ MALICIOUS_DATA = "malicious data"
 
 
 @pytest.fixture
-def two_blocks_blockchain():
+def blockchain():
     """
     Generate blockchain of two blocks for tests
     """
@@ -19,8 +20,16 @@ def two_blocks_blockchain():
     return blockchain
 
 
-def test_add_block(two_blocks_blockchain):
-    assert last(two_blocks_blockchain.chain).data == DATA
+def test_add_block(blockchain):
+    assert last(blockchain.chain).data == DATA
+
+
+def test_replace_chain(blockchain):
+    longer_blockhain = deepcopy(blockchain)
+    longer_blockhain.add_block("third block data")
+    blockchain.replace_chain(longer_blockhain.chain)
+
+    assert len(blockchain.chain) == 3
 
 
 def test_blockchain_instance():
@@ -31,19 +40,19 @@ def test_blockchain_instance():
     assert genesis_block.data == GENESIS_DATA["data"]
 
 
-def test_validate_blockchain(two_blocks_blockchain):
-    assert Blockchain.validate_blockchain(two_blocks_blockchain.chain) is None
+def test_validate_blockchain(blockchain):
+    assert Blockchain.validate_blockchain(blockchain.chain) is None
 
 
-def test_validate_blockchain_genesis_block_is_invalid(two_blocks_blockchain):
-    two_blocks_blockchain.chain[0].data = MALICIOUS_DATA
-
-    with pytest.raises(BlockchainValidationError):
-        Blockchain.validate_blockchain(two_blocks_blockchain.chain)
-
-
-def test_validate_blockchain_block_is_invalid(two_blocks_blockchain):
-    two_blocks_blockchain.chain[1].data = MALICIOUS_DATA
+def test_validate_blockchain_genesis_block_is_invalid(blockchain):
+    blockchain.chain[0].data = MALICIOUS_DATA
 
     with pytest.raises(BlockchainValidationError):
-        Blockchain.validate_blockchain(two_blocks_blockchain.chain)
+        Blockchain.validate_blockchain(blockchain.chain)
+
+
+def test_validate_blockchain_block_is_invalid(blockchain):
+    blockchain.chain[1].data = MALICIOUS_DATA
+
+    with pytest.raises(BlockchainValidationError):
+        Blockchain.validate_blockchain(blockchain.chain)
