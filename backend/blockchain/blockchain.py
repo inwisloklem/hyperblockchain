@@ -1,5 +1,9 @@
 from backend.blockchain.block import Block
-from backend.blockchain.errors import BlockchainValidationError, BlockValidationError
+from backend.blockchain.errors import (
+    BlockchainReplacementError,
+    BlockchainValidationError,
+    BlockValidationError,
+)
 from pydash import head, last
 
 
@@ -18,6 +22,20 @@ class Blockchain:
         block = Block.mine_block(last(self.chain), data)
         self.chain.append(block)
 
+    def replace_chain(self, incoming_chain):
+        """
+        Replace this chain with incoming chain by the following rules:
+            - must be longer than the local chain
+            - blocks of incoming chain must be formatted correctly
+        """
+        if len(incoming_chain) <= len(self.chain):
+            raise BlockchainReplacementError("Incoming chain must be longer than the local one")
+
+        try:
+            Blockchain.validate_blockchain(incoming_chain)
+        except BlockchainValidationError as e:
+            raise BlockchainReplacementError(f"Incoming chain is invalid: {e}")
+
     @staticmethod
     def validate_blockchain(chain):
         """
@@ -32,5 +50,5 @@ class Blockchain:
             for i, block in enumerate(chain[1:], start=1):
                 last_block = chain[i - 1]
                 Block.validate_block(last_block, block)
-        except BlockValidationError:
-            raise BlockchainValidationError("Blocks are not formatted correctly")
+        except BlockValidationError as e:
+            raise BlockchainValidationError(f"Blocks are not formatted correctly: {e}")
