@@ -4,23 +4,23 @@
 ## Install
 
 ```
-pipenv install
+poetry install
 ```
 
 ## Run
 
 ```
-pipenv run python3 -m backend.blockchain.blockchain
+poetry run python3 -m backend.blockchain.blockchain
 ```
 
 ## Scripts
 
 ```
-pipenv run python3 -m backend.scripts.average_block_rate
+poetry run python3 -m backend.scripts.average_block_rate
 ```
 
 ## Test
 
 ```
-pipenv run python3 -m pytest backend
+poetry run python3 -m pytest backend
 ```
