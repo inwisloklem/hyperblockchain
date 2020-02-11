@@ -24,3 +24,9 @@ poetry run python3 -m backend.scripts.average_block_rate
 ```
 poetry run python3 -m pytest backend
 ```
+
+## API
+
+```
+poetry run python3 -m backend.app
+```
