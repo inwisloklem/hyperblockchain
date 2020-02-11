@@ -8,6 +8,7 @@ authors = ["inwisloklem <89099109104@mail.ru>"]
 python = "^3.7"
 pydash = "^4.7.6"
 Flask = "^1.1.1"
+pubnub = "^4.3.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.3.5"
