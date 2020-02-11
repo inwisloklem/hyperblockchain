@@ -41,6 +41,12 @@ class Block:
 
         return f"Block: {{{', '.join([f'{k}: {v}' for k, v in block.items()])}}}"
 
+    def to_json(self):
+        """
+        Serialize the block into a dict of its attributes
+        """
+        return self.__dict__
+
     @staticmethod
     def adjust_difficulty(last_block, new_timestamp):
         """
