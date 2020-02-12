@@ -5,10 +5,10 @@ description = ""
 authors = ["inwisloklem <89099109104@mail.ru>"]
 
 [tool.poetry.dependencies]
-python = "^3.7"
-pydash = "^4.7.6"
 Flask = "^1.1.1"
 pubnub = "^4.3.0"
+pydash = "^4.7.6"
+python = "^3.7"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.3.5"
