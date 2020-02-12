@@ -7,7 +7,19 @@
 poetry install
 ```
 
-## Run
+## Run app
+
+```
+poetry run python3 -m backend.app
+```
+
+## In PEER mode
+
+```
+export PEER=True && poetry run python3 -m backend.app
+```
+
+## Run blockchain
 
 ```
 poetry run python3 -m backend.blockchain.blockchain
@@ -23,10 +35,4 @@ poetry run python3 -m backend.scripts.average_block_rate
 
 ```
 poetry run python3 -m pytest backend
-```
-
-## API
-
-```
-poetry run python3 -m backend.app
 ```
