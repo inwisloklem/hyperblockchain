@@ -1,15 +1,14 @@
 import os
 from flask import Flask, jsonify
 from backend.blockchain.blockchain import Blockchain
-from backend.pubsub import DEFAULT_CHANNEL, PubSub
-from backend.util import generate_port
-from pydash import last
+from backend.pubsub import BLOCK_CHANNEL, DEFAULT_CHANNEL, PubSub
+from backend.util.generate_port import generate_port
 
 DEFAULT_PORT = 4444
 TRANSACTION_DATA = 'stubbed transaction data'
 
 blockchain = Blockchain()
-pubsub = PubSub([DEFAULT_CHANNEL])
+pubsub = PubSub([BLOCK_CHANNEL, DEFAULT_CHANNEL])
 
 app = Flask(__name__)
 app.config["JSONIFY_PRETTYPRINT_REGULAR"] = True
@@ -23,7 +22,10 @@ def get_blockchain():
 @app.route("/blockchain/mine")
 def get_blockchain_mine():
     blockchain.add_block(TRANSACTION_DATA)
-    return jsonify(last(blockchain.chain).to_json())
+    block = blockchain.get_last_block()
+    pubsub.broadcast_block(block)
+
+    return jsonify(block.to_json())
 
 
 is_peer = os.environ.get("PEER") == "True"
