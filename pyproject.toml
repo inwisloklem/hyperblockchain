@@ -9,6 +9,7 @@ Flask = "^1.1.1"
 pubnub = "^4.3.0"
 pydash = "^4.7.6"
 python = "^3.7"
+requests = "^2.22.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.3.5"
