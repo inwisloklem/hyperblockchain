@@ -26,6 +26,12 @@ class PubSub():
         self.pubnub.subscribe().channels(channels).execute()
         self.pubnub.add_listener(Listener())
 
+    def broadcast_block(self, block):
+        """
+        Broadcast a block object to all nodes
+        """
+        self.publish(BLOCK_CHANNEL, block.to_json())
+
     def publish(self, channel, message):
         """
         Publish the message to the channel
