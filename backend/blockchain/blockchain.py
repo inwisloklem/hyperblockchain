@@ -19,8 +19,17 @@ class Blockchain:
         return f"Blockchain: {self.chain}"
 
     def add_block(self, data):
+        """
+        Mine block then add new block to the chain
+        """
         block = Block.mine_block(last(self.chain), data)
         self.chain.append(block)
+
+    def get_last_block(self):
+        """
+        Return the last block in the chain
+        """
+        return last(self.chain)
 
     def replace_chain(self, incoming_chain):
         """
