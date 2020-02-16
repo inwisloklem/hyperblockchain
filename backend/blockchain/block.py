@@ -63,6 +63,13 @@ class Block:
         return 1
 
     @staticmethod
+    def from_json(block_json):
+        """
+        Deserialize a block JSON representation into a block object
+        """
+        return Block(**block_json)
+
+    @staticmethod
     def make_genesis_block():
         """
         Make a first block also called genesis
