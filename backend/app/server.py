@@ -8,7 +8,7 @@ DEFAULT_PORT = 4444
 TRANSACTION_DATA = 'stubbed transaction data'
 
 blockchain = Blockchain()
-pubsub = PubSub([BLOCK_CHANNEL, DEFAULT_CHANNEL])
+pubsub = PubSub([BLOCK_CHANNEL, DEFAULT_CHANNEL], blockchain)
 
 app = Flask(__name__)
 app.config["JSONIFY_PRETTYPRINT_REGULAR"] = True
