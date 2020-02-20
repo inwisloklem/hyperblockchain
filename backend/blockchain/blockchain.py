@@ -54,6 +54,13 @@ class Blockchain:
         return list(map(lambda block: block.to_json(), self.chain))
 
     @staticmethod
+    def from_json(chain_json):
+        """
+        Deserialize a chain JSON representation into a chain
+        """
+        return [Block.from_json(block) for block in chain_json]
+
+    @staticmethod
     def validate_blockchain(chain):
         """
         Validate the incoming chain by the following rules:
