@@ -5,7 +5,7 @@ from backend.util.convert import convert_hex_to_binary
 from backend.util.make_hash_sha256 import make_hash_sha256
 
 GENESIS_DATA = {
-    "timestamp": time.time_ns(),
+    "timestamp": 1582219171964724000,
     "last_block_hash": None,
     "data": "first block data",
     "difficulty": 10,
