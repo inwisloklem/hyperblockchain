@@ -6,6 +6,7 @@ from backend.blockchain.errors import BlockValidationError
 from backend.util.convert import convert_binary_to_hex, convert_hex_to_binary
 from backend.util.make_hash_sha256 import make_hash_sha256
 
+ADDITIONAL_DATA = "third block data"
 DATA = "second block data"
 MALICIOUS_DATA = "malicious data"
 
@@ -45,16 +46,16 @@ def test_mine_block():
 
 
 def test_mine_block_quickly_adjust_difficulty():
-    last_block = Block.make_genesis_block()
-    block = Block.mine_block(last_block, DATA)
+    last_block = Block.mine_block(Block.make_genesis_block(), DATA)
+    block = Block.mine_block(last_block, ADDITIONAL_DATA)
 
     assert block.difficulty > last_block.difficulty
 
 
 def test_mine_block_slowly_adjust_difficulty():
-    last_block = Block.make_genesis_block()
+    last_block = Block.mine_block(Block.make_genesis_block(), DATA)
     time.sleep(MINE_RATE / SECONDS_MULTIPLIER)
-    block = Block.mine_block(last_block, DATA)
+    block = Block.mine_block(last_block, ADDITIONAL_DATA)
 
     assert block.difficulty < last_block.difficulty
 
