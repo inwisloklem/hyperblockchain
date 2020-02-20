@@ -1,6 +1,8 @@
 import os
+import requests
 from flask import Flask, jsonify
 from backend.blockchain.blockchain import Blockchain
+from backend.blockchain.errors import BlockchainReplacementError
 from backend.pubsub import BLOCK_CHANNEL, DEFAULT_CHANNEL, PubSub
 from backend.util.generate_port import generate_port
 
@@ -12,6 +14,8 @@ pubsub = PubSub([BLOCK_CHANNEL, DEFAULT_CHANNEL], blockchain)
 
 app = Flask(__name__)
 app.config["JSONIFY_PRETTYPRINT_REGULAR"] = True
+
+is_peer = os.environ.get("PEER") == "True"
 
 
 @app.route("/blockchain")
@@ -28,5 +32,17 @@ def get_blockchain_mine():
     return jsonify(block.to_json())
 
 
-is_peer = os.environ.get("PEER") == "True"
+def synchronize():
+    if is_peer:
+        response = requests.get(f"http://127.0.0.1:{DEFAULT_PORT}/blockchain")
+        chain_json = response.json()
+
+        try:
+            blockchain.replace_chain(Blockchain.from_json(chain_json))
+            print("Synchronization success\n")
+        except BlockchainReplacementError as e:
+            print(f"Synchronization failure: {e}\n")
+
+
+synchronize()
 app.run(port=generate_port(is_peer, DEFAULT_PORT))
