@@ -3,6 +3,7 @@ from backend.config import STARTING_BALANCE
 from cryptography.hazmat.backends import default_backend
 from cryptography.hazmat.primitives.asymmetric import ec
 from cryptography.hazmat.primitives import hashes
+from cryptography.exceptions import InvalidSignature
 from uuid import uuid4
 
 
@@ -19,7 +20,7 @@ class Wallet:
 
     def sign(self, data):
         """
-        Generate a signature based on the data using private key
+        Generate a signature based on the `data` using `private_key`
         """
         encoded_data = json.dumps(data).encode("utf-8")
         return self.private_key.sign(encoded_data, ec.ECDSA(hashes.SHA256()))
@@ -32,12 +33,25 @@ class Wallet:
         uuid = str(uuid4())
         return uuid[0:8]
 
+    @staticmethod
+    def verify(public_key, data, signature):
+        """
+        Verify a signature based on the original `public_key` and `data`
+        """
+        encoded_data = json.dumps(data).encode("utf-8")
+
+        try:
+            public_key.verify(signature, encoded_data, ec.ECDSA(hashes.SHA256()))
+            return True
+        except InvalidSignature:
+            return False
+
 
 if __name__ == "__main__":
     wallet = Wallet()
-    print(wallet.__dict__)
 
     data = {"test": "message"}
     signature = wallet.sign(data)
 
-    print(f"Signature: {signature}")
+    is_signature_valid = Wallet.verify(wallet.public_key, data, signature)
+    print("Is signature valid:", is_signature_valid)
