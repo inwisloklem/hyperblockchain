@@ -42,16 +42,6 @@ class Wallet:
 
         try:
             public_key.verify(signature, encoded_data, ec.ECDSA(hashes.SHA256()))
-            return True
         except InvalidSignature:
             return False
-
-
-if __name__ == "__main__":
-    wallet = Wallet()
-
-    data = {"test": "message"}
-    signature = wallet.sign(data)
-
-    is_signature_valid = Wallet.verify(wallet.public_key, data, signature)
-    print("Is signature valid:", is_signature_valid)
+        return True
