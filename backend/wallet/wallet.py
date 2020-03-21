@@ -26,7 +26,7 @@ class Wallet:
         return self.private_key.sign(encoded_data, ec.ECDSA(hashes.SHA256()))
 
     @staticmethod
-    def verify(public_key, data, signature):
+    def verify_signature(public_key, data, signature):
         """
         Verify a signature based on the original `public_key` and `data`
         """
