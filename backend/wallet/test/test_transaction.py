@@ -31,7 +31,7 @@ def test_transaction(recipient_address_sender_wallet_pair):
     assert transaction.input["public_key"] == sender_wallet.public_key
     assert type(transaction.input["timestamp"]) is int
 
-    assert Wallet.verify(input["public_key"], output, input["signature"])
+    assert Wallet.verify_signature(input["public_key"], output, input["signature"])
 
 
 def test_transaction_amount_exceeds_balance(recipient_address_sender_wallet_pair):
