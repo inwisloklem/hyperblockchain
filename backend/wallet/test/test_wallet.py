@@ -15,11 +15,11 @@ def wallet_signature_pair():
     return wallet, signature
 
 
-def test_verify_wallet_signature(wallet_signature_pair):
+def test_verify_signature(wallet_signature_pair):
     wallet, signature = wallet_signature_pair
-    assert Wallet.verify(wallet.public_key, DATA, signature) is True
+    assert Wallet.verify_signature(wallet.public_key, DATA, signature) is True
 
 
-def test_verify_wallet_invalid_signature(wallet_signature_pair):
+def test_verify_signature_is_invalid(wallet_signature_pair):
     wallet, signature = wallet_signature_pair
-    assert Wallet.verify(Wallet().public_key, DATA, signature) is False
+    assert Wallet.verify_signature(Wallet().public_key, DATA, signature) is False
